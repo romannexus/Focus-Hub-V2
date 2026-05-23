@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useAuth } from "../Contexts/AuthContext";
+import { useToDo } from "../Contexts/ToDoContext";
 
 const dateFormatter = new Intl.DateTimeFormat(
   new Intl.Locale(navigator.language),
@@ -13,13 +12,11 @@ const dateFormatter = new Intl.DateTimeFormat(
 );
 
 function ToDoTask({ id, created_at, title, is_completed }) {
-  const [isCompleted, setIsCompleted] = useState(is_completed);
-  const { updateTaskCompleted } = useAuth();
+  const { updateTaskCompleted, deleteTask } = useToDo();
 
   function updateTask() {
     try {
-      setIsCompleted((prev) => !prev);
-      updateTaskCompleted(id, !isCompleted);
+      updateTaskCompleted(id, !is_completed);
     } catch (err) {
       console.error(err.mesage);
     }
@@ -33,9 +30,9 @@ function ToDoTask({ id, created_at, title, is_completed }) {
         <label className="task-label flex items-center gap-3 cursor-pointer flex-1">
           <input
             type="checkbox"
-            checked={isCompleted ? "checked" : ""}
+            checked={is_completed ? true : false}
             className="peer sr-only"
-            onClick={() => {
+            onChange={() => {
               updateTask();
             }}
           />
@@ -64,6 +61,9 @@ function ToDoTask({ id, created_at, title, is_completed }) {
         <button
           className="btn-delete text-gray-400 hover:text-red-500 bg-transparent border-none p-2 rounded-lg hover:bg-red-50 cursor-pointer opacity-0 group-hover:opacity-100 transition-all duration-200 m-0"
           aria-label="Delete"
+          onClick={() => {
+            deleteTask(id);
+          }}
         >
           <svg
             className="w-5 h-5"

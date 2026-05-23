@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../Contexts/AuthContext";
 import ToDoTask from "./ToDoTask";
+import { useToDo } from "../Contexts/ToDoContext";
 
 function ToDoList() {
-  const { fetchTasks } = useAuth();
-  const [tasks, setTasks] = useState([]);
-
+  const { tasks, fetchTasks, addTask } = useToDo();
+  const [taskTitle, setTaskTitle] = useState([]);
   useEffect(() => {
     async function fetchdata() {
       try {
-        const data = await fetchTasks();
-        setTasks(data);
+        await fetchTasks();
+        // setTasks(data);
       } catch (err) {
         console.error(err);
       }
@@ -24,11 +23,20 @@ function ToDoList() {
         Today's Plan
       </h1>
 
-      <form className="flex flex-col sm:flex-row gap-3 mb-8 w-full">
+      <form
+        className="flex flex-col sm:flex-row gap-3 mb-8 w-full"
+        onSubmit={(e) => {
+          e.preventDefault();
+          addTask(taskTitle);
+          setTaskTitle("");
+        }}
+      >
         <input
           type="text"
           placeholder="What are you working on?"
           className="flex-1 border border-gray-300 rounded-[10px] px-4 py-3 text-[16px] text-gray-800 placeholder-gray-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-gray-50 focus:bg-white m-0"
+          onChange={(e) => setTaskTitle(e.target.value)}
+          value={taskTitle}
         />
         <input
           type="submit"

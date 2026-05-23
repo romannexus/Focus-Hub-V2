@@ -1,15 +1,10 @@
 import { createContext, useContext, useReducer } from "react";
-import { createClient } from "@supabase/supabase-js/dist/index.cjs";
-
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+import supabase from "../lib/supabaseClient";
 
 const AuthContext = createContext();
 const initialState = {
   user_id: null,
   isAuthenticated: false,
-  tasks: [],
 };
 
 function reducer(state, action) {
@@ -43,29 +38,8 @@ function AuthProvider({ children }) {
     // console.log(data.user.id);
   }
 
-  async function fetchTasks() {
-    const { data, error } = await supabase
-      .from("tasks")
-      .select("*")
-      .order("created_at");
-    if (error) throw new Error("Failed to fetch tasks", error.message);
-    // console.log(data);
-    dispatch({ type: "tasksFetched", payload: data });
-    return data;
-  }
-  async function updateTaskCompleted(id, value) {
-    console.log(value);
-    const { error } = await supabase
-      .from("tasks")
-      .update({ is_completed: value })
-      .eq("id", id);
-    if (error) throw error;
-  }
-
   return (
-    <AuthContext.Provider
-      value={{ login, fetchTasks, updateTaskCompleted, tasks, isAuthenticated }}
-    >
+    <AuthContext.Provider value={{ login, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

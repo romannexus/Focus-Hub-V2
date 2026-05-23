@@ -7,25 +7,28 @@ import ForgotPassword from "./pages/ForgotPassword";
 import AppLayout from "./pages/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./Contexts/AuthContext";
+import { ToDoProvider } from "./Contexts/ToDoContext";
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={<Authorization />} />
-          <Route path="register" element={<Registration />} />
-          <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="app"
-            element={
-              <ProtectedRoute>
-                <AppLayout />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <ToDoProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route index element={<Authorization />} />
+            <Route path="register" element={<Registration />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route
+              path="app"
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </ToDoProvider>
     </AuthProvider>
   );
 }
