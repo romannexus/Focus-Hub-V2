@@ -2,7 +2,6 @@ import { createContext, useContext, useReducer } from "react";
 import supabase from "../lib/supabaseClient";
 
 function reducer(state, action) {
-  console.log(state);
   switch (action.type) {
     case "tasksFetched": {
       return { ...state, tasks: action.payload };
@@ -53,7 +52,6 @@ function ToDoProvider({ children }) {
       .select()
       .single();
     if (error) throw error;
-    console.log(data);
     dispatch({ type: "taskAdded", payload: data });
   }
   async function updateTaskCompleted(id, value) {

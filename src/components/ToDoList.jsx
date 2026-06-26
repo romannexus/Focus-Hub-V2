@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+
 import ToDoTask from "./ToDoTask";
 import { useToDo } from "../Contexts/ToDoContext";
+
+const MotionToDoTask = motion(ToDoTask);
 
 function ToDoList() {
   const { tasks, fetchTasks, addTask } = useToDo();
@@ -45,10 +49,22 @@ function ToDoList() {
         />
       </form>
 
-      <ul className="flex flex-col gap-3 p-0 m-0 list-none overflow-x-hidden">
+      <ul className="flex flex-col gap-3 p-0 m-0 list-none overflow-x-hidden scrollbar-none">
+        <AnimatePresence>
         {tasks.map((taskData) => (
-          <ToDoTask key={taskData.id} {...taskData} />
-        ))}
+            <MotionToDoTask 
+              key={taskData.id} 
+              {...taskData} 
+              
+              exit={{opacity: 0, x: -500}} 
+              transition={{
+                layout: { duration: 0.08, ease: "ease", type: "tween" },
+                exit: { duration: 0.08, ease: "easeIn" },
+              }}
+              layout = 'position'
+              />
+          ))}
+        </AnimatePresence>
       </ul>
     </section>
   );

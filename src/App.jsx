@@ -6,8 +6,10 @@ import Registration from "./pages/Registration";
 import ForgotPassword from "./pages/ForgotPassword";
 import AppLayout from "./pages/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 import { AuthProvider } from "./Contexts/AuthContext";
 import { ToDoProvider } from "./Contexts/ToDoContext";
+import { SoundProvider } from "./Contexts/SoundContext";
 
 function App() {
   return (
@@ -22,7 +24,9 @@ function App() {
               path="app"
               element={
                 <ProtectedRoute>
-                  <AppLayout />
+                  <SoundProvider>
+                    <AppLayout />
+                  </SoundProvider>
                 </ProtectedRoute>
               }
             />

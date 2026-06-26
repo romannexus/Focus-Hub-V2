@@ -1,4 +1,43 @@
+import { useState, useEffect, useRef } from "react";
+import PlayVolume from "./PlayVolume";
+import SoundButton from "./SoundButton";
+
 function Atmosphere() {
+  const audioRef = useRef(null);
+  const [activeSound, setActiveSound] = useState("forest");
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(50);
+
+  const SOUNDS_URL = import.meta.env.VITE_SOUNDS_BASE_URL;
+
+  useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(`${SOUNDS_URL}/${activeSound}.ogg`);
+      audioRef.current.loop = true;
+    } else {
+      audioRef.current.src = `${SOUNDS_URL}/${activeSound}.ogg`;
+      setIsPlaying(false);
+    }
+  }, [activeSound, SOUNDS_URL]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = volume / 100;
+  }, [volume]);
+
   return (
     <section className="py-8 px-6 md:px-8 bg-white rounded-[20px] shadow-[0_0_15px_rgba(0,0,0,0.04)] border border-gray-100">
       <div className="flex items-center justify-between mb-6">
@@ -6,76 +45,36 @@ function Atmosphere() {
           Atmosphere
         </h2>
 
-        <div className="flex items-center gap-4">
-          <button className="play-toggle-btn relative flex items-center justify-center w-10 h-10 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white rounded-[10px] transition-colors cursor-pointer border border-blue-100 overflow-hidden">
-            <svg
-              className="icon-play absolute w-5 h-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-
-            <svg
-              className="icon-pause absolute w-5 h-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </button>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value="50"
-            className="w-24 h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600 outline-none"
-          />
-        </div>
+        <PlayVolume
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          volume={volume}
+          setVolume={setVolume}
+        />
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <button
-          data-sound="rain"
-          className="js-sound-btn sound-btn-inactive flex flex-col items-center justify-center p-4 rounded-[10px] transition-all cursor-pointer group"
-        >
-          <span className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">
-            🌧️
-          </span>
-          <span className="text-[14px] font-bold group-hover:text-blue-600">
-            Rain
-          </span>
-        </button>
-
-        <button
-          data-sound="calm"
-          className="js-sound-btn sound-btn-active flex flex-col items-center justify-center p-4 rounded-[10px] transition-all cursor-pointer group"
-        >
-          <span className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">
-            💤
-          </span>
-          <span className="text-[14px] font-bold">Calm</span>
-        </button>
-
-        <button
-          data-sound="forest"
-          className="js-sound-btn sound-btn-inactive flex flex-col items-center justify-center p-4 rounded-[10px] transition-all cursor-pointer group"
-        >
-          <span className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">
-            🌲
-          </span>
-          <span className="text-[14px] font-bold group-hover:text-blue-600">
-            Forest
-          </span>
-        </button>
+        <SoundButton
+          sound="rain"
+          emoji="🌧️"
+          label="Rain"
+          isActive={activeSound === "rain"}
+          onClick={setActiveSound}
+        />
+        <SoundButton
+          sound="calm1"
+          emoji="💤"
+          label="Calm"
+          isActive={activeSound === "calm1"}
+          onClick={setActiveSound}
+        />
+        <SoundButton
+          sound="forest"
+          emoji="🌲"
+          label="Forest"
+          isActive={activeSound === "forest"}
+          onClick={setActiveSound}
+        />
       </div>
     </section>
   );

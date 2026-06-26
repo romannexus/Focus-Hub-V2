@@ -1,4 +1,5 @@
 import { useToDo } from "../Contexts/ToDoContext";
+import { forwardRef } from "react";
 
 const dateFormatter = new Intl.DateTimeFormat(
   new Intl.Locale(navigator.language),
@@ -11,7 +12,7 @@ const dateFormatter = new Intl.DateTimeFormat(
   },
 );
 
-function ToDoTask({ id, created_at, title, is_completed }) {
+const ToDoTask = forwardRef( function ToDoTask({ id, created_at, title, is_completed }, ref) {
   const { updateTaskCompleted, deleteTask } = useToDo();
 
   function updateTask() {
@@ -23,8 +24,9 @@ function ToDoTask({ id, created_at, title, is_completed }) {
   }
   return (
     <li
+      ref={ref}
       data-id={id}
-      className="group flex flex-col px-4 pt-4 pb-1.5 bg-white border border-gray-200 hover:border-blue-300 hover:shadow-sm rounded-[10px] transition-all duration-200"
+      className="group flex flex-col px-4 pt-4 pb-1.5 bg-white border border-gray-200 hover:border-blue-300 hover:shadow-sm rounded-[10px] transition-[border,shadow,border-color] duration-200"
     >
       <div className="flex items-center justify-between w-full">
         <label className="task-label flex items-center gap-3 cursor-pointer flex-1">
@@ -88,6 +90,6 @@ function ToDoTask({ id, created_at, title, is_completed }) {
       </div>
     </li>
   );
-}
+});
 
 export default ToDoTask;
