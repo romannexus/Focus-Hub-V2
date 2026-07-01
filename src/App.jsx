@@ -9,29 +9,29 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 import { AuthProvider } from "./Contexts/AuthContext";
 import { ToDoProvider } from "./Contexts/ToDoContext";
-import { SoundProvider } from "./Contexts/SoundContext";
+import { ModalTimerProvider } from "./Contexts/ModalTimerContext";
 
 function App() {
   return (
     <AuthProvider>
       <ToDoProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route index element={<Authorization />} />
-            <Route path="register" element={<Registration />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route
-              path="app"
-              element={
-                <ProtectedRoute>
-                  <SoundProvider>
+        <ModalTimerProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route index element={<Authorization />} />
+              <Route path="register" element={<Registration />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route
+                path="app"
+                element={
+                  <ProtectedRoute>
                     <AppLayout />
-                  </SoundProvider>
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </ModalTimerProvider>
       </ToDoProvider>
     </AuthProvider>
   );

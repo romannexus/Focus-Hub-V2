@@ -43,6 +43,7 @@ function ToDoProvider({ children }) {
       .select("*")
       .order("created_at");
     if (error) throw new error();
+    console.log(data);
     dispatch({ type: "tasksFetched", payload: data });
   }
   async function addTask(title) {
